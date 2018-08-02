@@ -94,7 +94,7 @@
 
 2. 下载项目到本地，且安装好依赖后，编辑 ./config/example_init.py，按**注释**提示修改配置；
 
-   ```
+   ```python
    # coding=utf-8
    
    STREAM = "BINLOG"
