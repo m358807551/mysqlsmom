@@ -166,7 +166,7 @@ def handle_binlog_stream(config):
             cache.set_log_file(binlogevent.next_binlog)
             cache.set_log_pos(binlogevent.position)
         else:
-            print(binlogevent.packet.log_pos)
+            print binlogevent.packet.log_pos
             for row in binlogevent.rows:
                 event = {"host": binlogevent._ctl_connection.host, "schema": binlogevent.schema,
                          "table": binlogevent.table,
@@ -191,7 +191,11 @@ def handle_binlog_stream(config):
                         pipeline = job["pipeline"]
                         rows = do_pipeline(pipeline, event["values"])
                         dest = job["dest"]
-                        to_dest(dest, rows)
+                        if isinstance(dest, list):
+                            for d in dest:
+                                to_dest(d, rows)
+                        else:
+                            to_dest(dest, rows)
 
                 cache.set_log_pos(binlogevent.packet.log_pos)
                 logging.info(json.dumps(event, cls=DateEncoder))
