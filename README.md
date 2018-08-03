@@ -1,4 +1,4 @@
-# mysqlsmom
+# MysqlsMom
 
 简介：同步mysql数据到elasticsearch的工具；
 
