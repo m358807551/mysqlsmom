@@ -153,6 +153,63 @@ QQ：358807551
 
    同步旧数据请看*全量同步MySql数据到es*；
 
+## 常见问题
+
+#### 能否只同步其中的一些字段，而不是所有字段到es？
+
+可以。
+
+如果是全量同步，可以在配置文件中的[sql]部分加以控制，例如：
+
+```
+...
+TASKS = [
+    {
+        "stream": {
+            "database": "test_db",
+            "sql": "select id, name from person"  # 只同步id和name字段
+    	},
+    	...
+    }
+]
+```
+
+如果是分析binlog同步，只需在pipeline中添加一行
+
+```
+"pipeline": [  # 按顺执行pipeline中的逻辑
+	{"only_fields": {"fields": ["id", "name"]}}, # 只同步 id 和 name字段
+    {"set_id": {"field": "id"}}
+]
+```
+
+#### 能否把数据同步到多个es索引？
+
+目前增量同步支持，只需修改配置文件中的[dest]
+
+```
+"dest": [
+        {
+            "es": {
+            "action": "upsert",
+            "index": "index1",  # 同步到 es index1.type1
+            "type": "type1",
+            "nodes": NODES
+        	}
+        },
+        {
+            "es": {
+            "action": "upsert",
+            "index": "index2",  # 同时同步到 es index1.type1
+            "type": "type2",
+            "nodes": NODES
+            }
+        }
+ ]
+```
+
+全量同步很快会支持该功能；
+
 ## 未完待续
 
-文档近期会不断完善，任何问题、建议都收到欢迎，请在issues留言，会在24小时内回复；
+文档近期会大幅度更新完善，任何问题、建议都收到欢迎，请在issues留言，会在24小时内回复；或联系QQ: 358807551；
