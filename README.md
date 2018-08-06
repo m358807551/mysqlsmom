@@ -153,35 +153,52 @@ QQ：358807551
 
    同步旧数据请看*全量同步MySql数据到es*；
 
+## Pipeline
+
+如果需要从Mysql获取数据再进行特殊处理再同步到elasticsearch，pipeline组件会派上用场。
+
+无论数据来自于全量同步的Sql语句或是通过实时分析binlog。
+
+例如：
+
+- 只同步某些字段到es
+
+  ```
+  "pipeline": [
+  	{"only_fields": {"fields": ["id", "name"]}}, # 只同步 id 和 name字段
+      ...
+  ]
+  ```
+
+- 重命名字段
+
+  ```
+  "pipeline": [
+  	{"replace_fields": {"name": ["name1", "name2"]}}, # 将name重命名为name1和name2
+      ...
+  ]
+  ```
+
+- 甚至可以执行跨库数据库查询
+
+  ```
+  "pipeline": [
+  	{
+  		"do_sql": {
+  			"database": "db2",
+  			"connection": CONNECTION2,
+  			"sql": "select company, personid from company_manager where personid = {id}"  # id 的值会自动替换
+  		}
+  	}
+      ...
+  ]
+  ```
+
+支持编写自定义函数，只需在 row_handlers.py 中加入，之后可在pipeline中配置调用。
+
+row_handlers.py中预定义了一些数据处理函数，但可能需要自定义的情况更多。
+
 ## 常见问题
-
-#### 能否只同步其中的一些字段，而不是所有字段到es？
-
-可以。
-
-如果是全量同步，可以在配置文件中的[sql]部分加以控制，例如：
-
-```
-...
-TASKS = [
-    {
-        "stream": {
-            "database": "test_db",
-            "sql": "select id, name from person"  # 只同步id和name字段
-    	},
-    	...
-    }
-]
-```
-
-如果是分析binlog同步，只需在pipeline中添加一行
-
-```
-"pipeline": [  # 按顺执行pipeline中的逻辑
-	{"only_fields": {"fields": ["id", "name"]}}, # 只同步 id 和 name字段
-    {"set_id": {"field": "id"}}
-]
-```
 
 #### 能否把数据同步到多个es索引？
 
@@ -219,7 +236,7 @@ TASKS = [
 2. 连接线上数据库发现增量同步不及时
 
    2.1 推荐使用内网IP连接数据库。连接线上数据库（如开启在阿里、腾讯服务器上的Mysql）时，推荐使用内网IP地址，因为外网IP会受到带宽等限制导致获取binlog数据速度受限，最终可能造成同步延时。
-  
+
 ## 未完待续
 
 文档近期会大幅度更新完善，任何问题、建议都收到欢迎，请在issues留言，会在24小时内回复；或联系QQ: 358807551；
