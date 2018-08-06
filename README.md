@@ -1,7 +1,7 @@
 ![Alt text](https://github.com/m358807551/images/blob/master/images/MysqlsMom.jpeg?raw=true)
 
 简介：同步mysql数据到elasticsearch的工具；
-QQ：358807551
+QQ、微信：358807551
 
 ## 特点
 
@@ -239,4 +239,4 @@ row_handlers.py中预定义了一些数据处理函数，但可能需要自定�
 
 ## 未完待续
 
-文档近期会大幅度更新完善，任何问题、建议都收到欢迎，请在issues留言，会在24小时内回复；或联系QQ: 358807551；
+文档近期会大幅度更新完善，任何问题、建议都收到欢迎，请在issues留言，会在24小时内回复；或联系QQ、微信: 358807551；
