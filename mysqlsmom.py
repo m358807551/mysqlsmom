@@ -99,15 +99,26 @@ def to_dest(dest, rows):
 def handle_init_stream(config):
     connection = config.CONNECTION
     for task in config.TASKS:
-        from peewee import MySQLDatabase, Model
+        import peewee
+        from peewee import MySQLDatabase
 
         db = MySQLDatabase(task["stream"]["database"],
                            **{'host': connection["host"], 'password': connection["passwd"], 'port': connection["port"],
                               'user': connection["user"]})
 
-        class MyModel(Model):
+        pk = task["stream"].get("pk")
+        if not pk:
+            pk = {"field": "id", "type": "int"}
+
+        class MyModel(peewee.Model):
+            _pk = {
+                "char": peewee.CharField(primary_key=True),
+                "int": peewee.IntegerField(primary_key=True)
+            }[pk["type"]]
+
             class Meta:
                 database = db
+        setattr(MyModel, pk["field"], MyModel._pk)
 
         query = MyModel.raw(task["stream"]["sql"]).dicts().iterator()
         for row in query:
@@ -198,11 +209,10 @@ def handle_binlog_stream(config):
                             to_dest(dest, rows)
 
                 cache.set_log_pos(binlogevent.packet.log_pos)
-                logging.info(json.dumps(event, cls=DateEncoder))
 
 
 if __name__ == "__main__":
-    # sys.argv = ["./config/example_binlog.py"]
+    # sys.argv = ["./config/example_init.py"]
     config_path = sys.argv[-1]
     config_module = importlib.import_module(
         ".".join(config_path[:-3].split("/")[-2:]),
