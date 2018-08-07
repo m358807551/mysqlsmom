@@ -17,7 +17,8 @@ TASKS = [
     {
         "stream": {
             "database": "test_db",  # 在此数据库执行sql语句
-            "sql": "select * from person"  # 将该sql语句选中的数据同步到 elasticsearch
+            "sql": "select * from person",  # 将该sql语句选中的数据同步到 elasticsearch
+            # "pk": {"field": "id", "type": "char"}  # 当主键id的类型是字符串时
         },
         "jobs": [
             {
