@@ -207,7 +207,7 @@ def handle_binlog_stream(config):
                                 to_dest(d, rows)
                         else:
                             to_dest(dest, rows)
-
+                logging.info(json.dumps(event, cls=DateEncoder))
                 cache.set_log_pos(binlogevent.packet.log_pos)
 
 
