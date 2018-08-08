@@ -15,7 +15,7 @@ QQ、微信：358807551
 ## 环境
 
 - python2.7；
-- 如需增量同步，需要mysql开启binlog且本地开启redis；
+- 如需增量同步，需要mysql开启binlog（binlog-format=row）且本地开启redis；
 
 ## 快速开始
 
