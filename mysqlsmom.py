@@ -15,6 +15,7 @@ from elasticsearch import Elasticsearch
 from elasticsearch import helpers
 
 import row_handlers
+import row_filters
 
 
 logging.basicConfig(level=logging.INFO,
@@ -198,21 +199,31 @@ def handle_binlog_stream(config):
                                                                        table=event["table"], action=event["action"])
                 jobs = event2jobs[event_type]
                 for job in jobs:
-                    if event["action"] in job["actions"]:
-                        pipeline = job["pipeline"]
-                        rows = do_pipeline(pipeline, event["values"])
-                        dest = job["dest"]
-                        if isinstance(dest, list):
-                            for d in dest:
-                                to_dest(d, rows)
-                        else:
-                            to_dest(dest, rows)
+                    if event["action"] not in job["actions"]:
+                        continue
+
+                    watched = job.get("watched")
+                    if watched:
+                        func_name, kwargs = watched.items()[0]
+                        func = getattr(row_filters, func_name)
+                        is_ok = func(event, **kwargs)
+                        if not is_ok:
+                            continue
+
+                    pipeline = job["pipeline"]
+                    rows = do_pipeline(pipeline, event["values"])
+                    dest = job["dest"]
+                    if isinstance(dest, list):
+                        for d in dest:
+                            to_dest(d, rows)
+                    else:
+                        to_dest(dest, rows)
                 logging.info(json.dumps(event, cls=DateEncoder))
                 cache.set_log_pos(binlogevent.packet.log_pos)
 
 
 if __name__ == "__main__":
-    # sys.argv = ["./config/example_init.py"]
+    # sys.argv = ["./config/example_binlog.py"]
     config_path = sys.argv[-1]
     config_module = importlib.import_module(
         ".".join(config_path[:-3].split("/")[-2:]),
