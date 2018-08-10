@@ -153,6 +153,9 @@ QQ、微信：358807551
 
    同步旧数据请看*全量同步MySql数据到es*；
 
+## 组织架构
+![Alt text](https://github.com/m358807551/images/blob/master/images/mysqlsmom/all.png?raw=true)
+
 ## Pipeline
 
 如果需要从Mysql获取数据再进行特殊处理再同步到elasticsearch，pipeline组件会派上用场。
