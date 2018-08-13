@@ -153,6 +153,9 @@ QQ、微信：358807551
 
    同步旧数据请看*全量同步MySql数据到es*；
 
+## 组织架构
+![Alt text](https://github.com/m358807551/images/blob/master/images/mysqlsmom/all.png?raw=true)
+
 ## Pipeline
 
 如果需要从Mysql获取数据再进行特殊处理再同步到elasticsearch，pipeline组件会派上用场。
@@ -236,6 +239,10 @@ row_handlers.py中预定义了一些数据处理函数，但可能需要自定�
 2. 连接线上数据库发现增量同步不及时
 
    2.1 推荐使用内网IP连接数据库。连接线上数据库（如开启在阿里、腾讯服务器上的Mysql）时，推荐使用内网IP地址，因为外网IP会受到带宽等限制导致获取binlog数据速度受限，最终可能造成同步延时。
+
+## 待改进
+
+1. 据部分用户反馈，全量同步百万级以上的数据性能不佳。
 
 ## 未完待续
 
