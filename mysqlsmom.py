@@ -48,9 +48,9 @@ class Cache(object):
 class DateEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime.datetime):
-            return obj.strftime('%Y-%m-%d %H:%M:%S')
+            return '{0.year:4d}-{0.month:02d}-{0.day:02d} {0.hour:02d}:{0.minute:02d}:{0.second:02d}'.format(obj)
         elif isinstance(obj, datetime.date):
-            return obj.strftime("%Y-%m-%d")
+            return '{0.year:4d}-{0.month:02d}-{0.day:02d}'.format(obj)
         else:
             return json.JSONEncoder.default(self, obj)
 
