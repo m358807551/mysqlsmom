@@ -4,6 +4,9 @@ STREAM = "BINLOG"  # "BINLOG" or "INIT"
 SERVER_ID = 99
 SLAVE_UUID = __name__
 
+# 一次同步 BULK_SIZE 条数据到elasticsearch，不设置该配置项默认为1
+BULK_SIZE = 1
+
 BINLOG_CONNECTION = {
     'host': '127.0.0.1',
     'port': 3306,

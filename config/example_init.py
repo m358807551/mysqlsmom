@@ -10,6 +10,9 @@ CONNECTION = {
     'passwd': ''
 }
 
+# 一次同步 BULK_SIZE 条数据到elasticsearch，不设置该配置项默认为1
+BULK_SIZE = 1
+
 # 修改elasticsearch节点
 NODES = [{"host": "127.0.0.1", "port": 9200}]
 

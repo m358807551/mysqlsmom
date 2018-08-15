@@ -75,30 +75,50 @@ def do_pipeline(pipeline, row):
     return rows
 
 
-def to_dest(dest, rows):
-    if isinstance(rows, dict):
-        rows = [rows]
-    for row in rows:
-        if dest.keys()[0] == "es":
+class ToDest(object):
+    def __init__(self, config):
+        self.bulk_size = getattr(config, "BULK_SIZE", 1)
+        self.es = Elasticsearch(getattr(config, "NODES"))
+
+        self.docs = []
+
+    def make_docs(self, dests, rows):
+        """向每个dests插入rows
+        """
+        if isinstance(rows, dict):
+            rows = [rows]
+        if isinstance(dests, dict):
+            dests = [dests]
+
+        for row in rows:
             row = copy.deepcopy(row)
+
+            logging.info(json.dumps(row, cls=DateEncoder))
+
             _id = row["_id"]
             del row["_id"]
 
-            es_config = dest["es"]
+            for dest in dests:
+                if dest.keys()[0] != "es":
+                    continue
 
-            es = Elasticsearch(es_config["nodes"])
-            # 有则更新，无则插入
-            # try:
-            logging.info(json.dumps(row, cls=DateEncoder))
-            docs = [{"_id": _id, "_type": es_config["type"], "_index": es_config["index"],
-                     "_source": {'doc': row, 'doc_as_upsert': True}, '_op_type': 'update'}]
-            helpers.bulk(es, docs)
-            # except Exception, e:
-            #     logging.warn(traceback.format_exc())
+                doc = {
+                    "_id": _id,
+                    "_type": dest["es"]["type"],
+                    "_index": dest["es"]["index"],
+                    "_source": {'doc': row, 'doc_as_upsert': True},
+                    '_op_type': 'update'
+                }
+                self.docs.append(doc)
+
+    def upload_docs(self):
+        helpers.bulk(self.es, self.docs)
+        self.docs = []
 
 
 def handle_init_stream(config):
     connection = config.CONNECTION
+    to_dest = ToDest(config)
     for task in config.TASKS:
         import peewee
         from peewee import MySQLDatabase
@@ -130,8 +150,11 @@ def handle_init_stream(config):
                 }
                 if event["action"] in job["actions"]:
                     rows = do_pipeline(job["pipeline"], event["values"])
-                    to_dest(job["dest"], rows)
+                    to_dest.make_docs(job["dest"], rows)
+                    if len(to_dest.docs) >= to_dest.bulk_size:
+                        to_dest.upload_docs()
         db.close()
+        to_dest.upload_docs()
 
 
 def handle_binlog_stream(config):
@@ -173,6 +196,7 @@ def handle_binlog_stream(config):
         slave_uuid=config.SLAVE_UUID
     )
 
+    to_dest = ToDest(config)
     for binlogevent in stream_binlog:
         if isinstance(binlogevent, RotateEvent):
             cache.set_log_file(binlogevent.next_binlog)
@@ -195,6 +219,8 @@ def handle_binlog_stream(config):
                     event["action"] = "insert"
                     event["values"] = dict(row["values"].items())
 
+                logging.info(json.dumps(event, cls=DateEncoder))
+
                 event_type = "{host}_{schema}_{table}_{action}".format(host=event["host"], schema=event["schema"],
                                                                        table=event["table"], action=event["action"])
                 jobs = event2jobs[event_type]
@@ -212,18 +238,15 @@ def handle_binlog_stream(config):
 
                     pipeline = job["pipeline"]
                     rows = do_pipeline(pipeline, event["values"])
-                    dest = job["dest"]
-                    if isinstance(dest, list):
-                        for d in dest:
-                            to_dest(d, rows)
-                    else:
-                        to_dest(dest, rows)
-                logging.info(json.dumps(event, cls=DateEncoder))
-                cache.set_log_pos(binlogevent.packet.log_pos)
+
+                    to_dest.make_docs(job["dest"], rows)
+                    if len(to_dest.docs) >= to_dest.bulk_size:
+                        to_dest.upload_docs()
+                        cache.set_log_pos(binlogevent.packet.log_pos)
 
 
 if __name__ == "__main__":
-    # sys.argv = ["./config/example_binlog.py"]
+    # sys.argv = ["./config/example_.py"]
     config_path = sys.argv[-1]
     config_module = importlib.import_module(
         ".".join(config_path[:-3].split("/")[-2:]),
