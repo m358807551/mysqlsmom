@@ -1,4 +1,4 @@
-![Alt text](https://upload-images.jianshu.io/upload_images/9371058-8d3aa64f85f9df4d.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/700?raw=true)
+![Alt text](https://upload-images.jianshu.io/upload_images/9371058-8d3aa64f85f9df4d.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/700)
 
 简介：同步mysql数据到elasticsearch的工具；
 QQ、微信：358807551
