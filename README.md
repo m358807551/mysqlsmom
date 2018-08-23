@@ -1,4 +1,4 @@
-![Alt text](https://github.com/m358807551/images/blob/master/images/MysqlsMom.jpeg?raw=true)
+![Alt text](https://upload-images.jianshu.io/upload_images/9371058-8d3aa64f85f9df4d.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/700)
 
 简介：同步mysql数据到elasticsearch的工具；
 QQ、微信：358807551
@@ -205,7 +205,7 @@ row_handlers.py中预定义了一些数据处理函数，但可能需要自定�
 
 #### 能否把数据同步到多个es索引？
 
-目前增量同步支持，只需修改配置文件中的[dest]
+支持，只需修改配置文件中的[dest]
 
 ```
 "dest": [
