@@ -156,79 +156,166 @@ QQ、微信：358807551
 ## 组织架构
 ![Alt text](https://github.com/m358807551/images/blob/master/images/mysqlsmom/all.png?raw=true)
 
-## Pipeline
+## *Mysqlsmom* 使用实战
 
-如果需要从Mysql获取数据再进行特殊处理再同步到elasticsearch，pipeline组件会派上用场。
+*Mysqlsmom* 的灵活性依赖于：
 
-无论数据来自于全量同步的Sql语句或是通过实时分析binlog。
+* 在 *row_handlers.py* 中添加自定义函数对取自Mysql的数据进行二次加工。
+* 在 *row_filters.py* 中添加自定义函数决定是否要同步某一条数据。
+* 在 *config/* 目录下的任意配置文件应用上面的函数。
 
-例如：
+如果不了解 Python 也没关系，上述两个文件中自带的函数足以应付大多数种情况，遇到特殊的同步需求可以在 Github 发起 issue 或通过微信、QQ联系作者。
 
-- 只同步某些字段到es
+#### 同步多张表
 
-  ```
-  "pipeline": [
-  	{"only_fields": {"fields": ["id", "name"]}}, # 只同步 id 和 name字段
-      ...
-  ]
-  ```
+在一个配置文件中即可完成：
 
-- 重命名字段
+```python
+...
+TASKS = [
+    # 同步表1
+    {
+        "stream": {
+            "database": "数据库名1",
+            "table": "表名1"
+        },
+        "jobs": [...]
+    }
+    # 同步表2
+    {
+        "stream": {
+            "database": "数据库名2",
+            "table": "表名2"
+        },
+        "jobs": [...]
+    }
+]
+```
 
-  ```
-  "pipeline": [
-  	{"replace_fields": {"name": ["name1", "name2"]}}, # 将name重命名为name1和name2
-      ...
-  ]
-  ```
+一个 *Mysql Connection* 对应**一个**配置文件。
 
-- 甚至可以执行跨库数据库查询
+#### 一张表同步到多个索引
 
-  ```
-  "pipeline": [
-  	{
-  		"do_sql": {
-  			"database": "db2",
-  			"connection": CONNECTION2,
-  			"sql": "select company, personid from company_manager where personid = {id}"  # id 的值会自动替换
-  		}
-  	}
-      ...
-  ]
-  ```
+分为两种情况。
 
-支持编写自定义函数，只需在 row_handlers.py 中加入，之后可在pipeline中配置调用。
+一种是把相同的数据同步到不同的索引，配置如下：
 
-row_handlers.py中预定义了一些数据处理函数，但可能需要自定义的情况更多。
+```python
+...
+TASKS = [
+    {
+        "stream": {...},
+        "jobs": [
+            {
+                "actions": [...],
+                "pipeline": [...],
+                "dest": [
+                    # 同步到索引1
+                    {
+                        "es": {"action": "upsert", "index": "索引1", "type": "类型1", "nodes": NODES},
+                    },
+                    # 同步到索引2
+                    {
+                        "es": {"action": "upsert", "index": "索引2", "type": "类型2", "nodes": NODES},
+                    }
+                ]
+            }
+        ]
+    },
+    ...
+]
+```
+
+另一种是把同一个表产生的数据经过不同的 *pipeline* 同步到不同的索引：
+
+```python
+...
+TASKS = [
+    {
+        "stream": {...},
+        "jobs": [
+            {
+                "actions": {...},
+                "pipeline": [...],  # 对数据经过一系列处理
+                "dest": {"es": {"index": "索引1", ...}}  # 同步到索引1
+            },
+            {
+                "actions": {...},
+                "pipeline": [...],  # 与上面的pipeline不同
+                "dest": {"es": {"index": "索引2", ...}}  # 同步到索引2
+            }
+        ]
+    }
+]
+```
+
+* *TASKS* 中的每一项对应一张要同步的表。
+* *jobs* 中的每一项对应对一条记录的一种处理方式。
+* *dest* 中的每一项对应一个es索引类型。
+
+#### 只同步某些字段
+
+对每条来自 *Mysql* 的 记录的处理都在 **pipeline** 中进行处理。
+
+```python
+"pipeline": [
+	{"only_fields": {"fields": ["id", "name"]}},  # 只同步 id 和 name字段
+    {"set_id": {"field": "id"}}  # 然后设置 id 字段为es中文档的_id
+]
+```
+
+#### 字段重命名
+
+对于 *Mysql* 中的字段名和 *elasticsearch* 中的域名不一致的情况：
+
+```python
+"pipeline": [
+    # 将name重命名为name1，age 重命名为age1
+	{"replace_fields": {"name": ["name1"], "age": ["age1"]}},
+    {"set_id": {"field": "id"}}
+]
+```
+
+*pipeline* 会依次执行处理函数，上面的例子等价于：
+
+```python
+"pipeline": [
+    # 先重命名 name 为 name1
+	{"replace_fields": {"name": ["name1"]}},
+    # 再重命名 age 为 age1
+    {"replace_fields": {"age": ["age1"]}},
+    {"set_id": {"field": "id"}}
+]
+```
+
+还有一种特殊情形，es 中两个字段存相同的数据，但是分词方式不同。
+
+例如 *name_default* 的分析器为 *default*，*name_raw* 设置为不分词，需要将 *name* 的值同时同步到这两个域：
+
+```python
+"pipeline": [
+	{"replace_fields": {"name": ["name_default", "name_raw"]}},
+    {"set_id": {"field": "id"}}
+]
+```
+
+当然上述问题有一个更好的解决方案，在 *es* 的 *mappings* 中配置 *name* 字段的 *fields* 属性即可，这超出了本文档的内容。
+
+#### 切分字符串为数组
+
+有时 Mysql 存储字符串类似："aaa|bbb|ccc"，希望转化成数组: ["aaa", "bbb", "ccc"] 再进行同步
+
+```python
+"pipeline": [
+	# tags 存储类似"aaa|bbb|ccc"的字符串，将 tags 字段的值按符号 `|` 切分成数组
+	{"split": {"field": "tags", "flag": "|"}},
+    {"set_id": {"field": "id"}}
+] 
+```
+
+#### 更多示例正在更新
 
 ## 常见问题
-
-#### 能否把数据同步到多个es索引？
-
-支持，只需修改配置文件中的[dest]
-
-```
-"dest": [
-        {
-            "es": {
-            "action": "upsert",
-            "index": "index1",  # 同步到 es index1.type1
-            "type": "type1",
-            "nodes": NODES
-        	}
-        },
-        {
-            "es": {
-            "action": "upsert",
-            "index": "index2",  # 同时同步到 es index1.type1
-            "type": "type2",
-            "nodes": NODES
-            }
-        }
- ]
-```
-
-全量同步很快会支持该功能；
 
 #### 为什么我的增量同步不及时？
 
