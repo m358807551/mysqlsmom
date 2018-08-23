@@ -1,21 +1,22 @@
 ![Alt text](https://github.com/m358807551/images/blob/master/images/MysqlsMom.jpeg?raw=true)
 
-简介：同步mysql数据到elasticsearch的工具；
+简介：同步 *Mysql* 数据到 *elasticsearch* 的工具；
 QQ、微信：358807551
 
 ## 特点
 
-1. 纯Python编写；
-2. 有全量、增量更新两种模式；
+1. 纯 *Python* 编写；
+2. 支持全量、增量更新；
 3. 全量更新只占用少量内存；支持通过sql语句同步数据；
 4. 增量更新自动断点续传；
-5. 取自mysql的数据可经过一系列自定义函数的处理后再同步至elasticsearch；
+5. 取自 *Mysql* 的数据可经过一系列自定义函数的处理后再同步至 *Elasticsearch*；
 6. 能用非常简单的配置完成复杂的同步任务；
 
 ## 环境
 
-- python2.7；
-- 如需增量同步，需要mysql开启binlog（binlog-format=row）且本地开启redis；
+- *python2.7*；
+- 增量同步需开启 *redis*；
+- 分析 *binlog* 的增量同步需要 *Mysql* 开启 *binlog*（*binlog-format=row*）；
 
 ## 快速开始
 
@@ -89,9 +90,9 @@ QQ、微信：358807551
 
    等待同步完成即可；
 
-### 增量同步MySql数据到es
+### 分析 *binlog* 的增量同步
 
-1. 确保要增量同步的MySql数据库开启binlog，且本地开启redis(为了存储最后一次读到的binlog文件名及读到的位置。未来可能支持本地文件存储该信息。)
+1. 确保要增量同步的MySql数据库开启binlog，且开启redis(为了存储最后一次读到的binlog文件名及读到的位置。未来可能支持本地文件存储该信息。)
 
 2. 下载项目到本地，且安装好依赖后，编辑 ./config/example_init.py，按**注释**提示修改配置；
 
@@ -142,7 +143,7 @@ QQ、微信：358807551
 
 3. 运行
 
-   ```
+   ```shell
    cd mysqlsmom
    python mysqlsmom.py ./config/example_binlog.py
    ```
@@ -152,6 +153,72 @@ QQ、微信：358807551
    注意：第一次运行该进程时不会同步MySql中已存在的数据，从第二次运行开始，将接着上次同步停止时的位置继续同步；
 
    同步旧数据请看*全量同步MySql数据到es*；
+
+### 基于更新时间的增量同步
+
+若 *Mysql* 表中有类似 `update_time` 的时间字段，且在每次插入、更新数据后将该字段的值设置为操作时间，则可在不用开启 *binlog* 的情况下进行增量同步。
+
+1. 下载项目到本地，且安装好依赖后，编辑 ./config/example_cron.py，按**注释**提示修改配置；
+
+   ```python
+   # coding=utf-8
+   
+   STREAM = "CRON"
+   
+   # 修改数据库连接
+   CONNECTION = {
+       'host': '127.0.0.1',
+       'port': 3306,
+       'user': 'root',
+       'passwd': ''
+   }
+   
+   # redis存储上次同步时间等信息
+   REDIS = {
+       "host": "127.0.0.1",
+       "port": 6379,
+       "db": 0,
+       "password": "password",  # 不需要密码则注释或删掉该行
+   }
+   
+   # 一次同步 BULK_SIZE 条数据到elasticsearch，不设置该配置项默认为1
+   BULK_SIZE = 1
+   
+   # 修改elasticsearch节点
+   NODES = [{"host": "127.0.0.1", "port": 9200}]
+   
+   TASKS = [
+       {
+           "stream": {
+               "database": "test_db",  # 在此数据库执行sql语句
+               "sql": "select id, name from person where update_time >= ?",  # 将该sql语句选中的数据同步到 elasticsearch
+               "seconds": 10,  # 每隔 seconds 秒同步一次,
+               "init_time": "2018-08-15 18:05:47"  # 只有第一次同步会加载
+           },
+           "jobs": [
+               {
+                   "pipeline": [
+                       {"set_id": {"field": "id"}}  # 默认设置 id字段的值 为 es 中的文档id
+                   ],
+                   "dest": {
+                       "es": {
+                           "action": "upsert",
+                           "index": "test_index",   # 设置 index
+                           "type": "test"          # 设置 type
+                       }
+                   }
+               }
+           ]
+       }
+   ]
+   ```
+
+2. 运行
+
+   ```shell
+   cd mysqlsmom
+   python mysqlsmom.py ./config/example_cron.py
+   ```
 
 ## 组织架构
 ![Alt text](https://github.com/m358807551/images/blob/master/images/mysqlsmom/all.png?raw=true)
@@ -377,4 +444,4 @@ TASKS = [
 
 ## 未完待续
 
-文档近期会大幅度更新完善，任何问题、建议都收到欢迎，请在issues留言，会在24小时内回复；或联系QQ、微信: 358807551；
+文档近期会较频繁更新，任何问题、建议都收到欢迎，请在issues留言，会在24小时内回复；或联系QQ、微信: 358807551；
