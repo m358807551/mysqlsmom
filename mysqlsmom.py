@@ -24,7 +24,10 @@ logging.basicConfig(level=logging.INFO,
 
 class Cache(object):
     def __init__(self, config):
-        self.r = redis.Redis(decode_responses=True, **config.REDIS)
+        redis_connection = getattr(config, "REDIS", None)
+        if redis_connection is None:
+            redis_connection = {"host": "127.0.0.1", "port": 6379}
+        self.r = redis.Redis(decode_responses=True, **redis_connection)
         self.log_file = "%s_%s" % (config.SLAVE_UUID, "log_file")
         self.log_pos = "%s_%s" % (config.SLAVE_UUID, "log_pos")
 
