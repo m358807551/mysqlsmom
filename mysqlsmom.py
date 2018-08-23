@@ -13,6 +13,7 @@ from pymysqlreplication.row_event import DeleteRowsEvent, WriteRowsEvent, Update
 from pymysqlreplication.event import RotateEvent
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
+from elasticsearch.helpers import BulkIndexError
 
 import row_handlers
 import row_filters
@@ -81,8 +82,6 @@ def do_pipeline(pipeline, row):
 class ToDest(object):
     def __init__(self, config):
         self.bulk_size = getattr(config, "BULK_SIZE", 1)
-        self.es = Elasticsearch(getattr(config, "NODES"))
-
         self.docs = []
 
     def make_docs(self, dests, rows):
@@ -105,17 +104,33 @@ class ToDest(object):
                 if dest.keys()[0] != "es":
                     continue
 
-                doc = {
-                    "_id": _id,
-                    "_type": dest["es"]["type"],
-                    "_index": dest["es"]["index"],
-                    "_source": {'doc': row, 'doc_as_upsert': True},
-                    '_op_type': 'update'
-                }
-                self.docs.append(doc)
+                if dest["es"]["action"] == "upsert":
+                    doc = {
+                        "_id": _id,
+                        "_type": dest["es"]["type"],
+                        "_index": dest["es"]["index"],
+                        "_source": {'doc': row, 'doc_as_upsert': True},
+                        '_op_type': 'update'
+                    }
+                    self.docs.append(doc)
+                elif dest["es"]["action"] == "delete":
+                    doc = {
+                        '_op_type': 'delete',
+                        '_index': dest["es"]["index"],
+                        '_type': dest["es"]["type"],
+                        '_id': _id
+                    }
+                    self.docs.append(doc)
 
     def upload_docs(self):
-        helpers.bulk(self.es, self.docs)
+        try:
+            helpers.bulk(es, self.docs)
+        except BulkIndexError, e:
+            for error in e.errors:
+                if not error.keys()[0] == "delete":
+                    raise e
+                if not error.values()[0]["found"] == False:
+                    raise e
         self.docs = []
 
 
@@ -255,6 +270,8 @@ if __name__ == "__main__":
         ".".join(config_path[:-3].split("/")[-2:]),
         "config"
     )
+
+    es = Elasticsearch(getattr(config_module, "NODES"))
 
     if config_module.STREAM == "INIT":
         handle_init_stream(config_module)
