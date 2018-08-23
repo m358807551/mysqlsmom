@@ -23,10 +23,10 @@ logging.basicConfig(level=logging.INFO,
 
 
 class Cache(object):
-    def __init__(self, config_name):
-        self.r = redis.Redis(host='localhost', port=6379, decode_responses=True)
-        self.log_file = "%s_%s" % (config_name, "log_file")
-        self.log_pos = "%s_%s" % (config_name, "log_pos")
+    def __init__(self, config):
+        self.r = redis.Redis(decode_responses=True, **config.REDIS)
+        self.log_file = "%s_%s" % (config.SLAVE_UUID, "log_file")
+        self.log_pos = "%s_%s" % (config.SLAVE_UUID, "log_pos")
 
     def get_log_file(self):
         return self.r.get(self.log_file)
@@ -158,7 +158,7 @@ def handle_init_stream(config):
 
 
 def handle_binlog_stream(config):
-    cache = Cache(config.SLAVE_UUID)
+    cache = Cache(config)
 
     # 该操作可以关闭旧有binlog连接
     stream_binlog = BinLogStreamReader(
@@ -246,7 +246,7 @@ def handle_binlog_stream(config):
 
 
 if __name__ == "__main__":
-    # sys.argv = ["./config/example_.py"]
+    # sys.argv = ["./config/example_binlog.py"]
     config_path = sys.argv[-1]
     config_module = importlib.import_module(
         ".".join(config_path[:-3].split("/")[-2:]),

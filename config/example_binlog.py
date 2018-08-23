@@ -14,6 +14,15 @@ BINLOG_CONNECTION = {
     'passwd': ''
 }
 
+# redis存储上次同步位置等信息
+REDIS = {
+    "host": "127.0.0.1",
+    "port": 6379,
+    "db": 0,
+    "password": "your password",  # 不需要密码则注释或删掉该行
+}
+
+
 NODES = [{"host": "127.0.0.1", "port": 9200}]
 
 TASKS = [
