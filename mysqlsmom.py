@@ -5,6 +5,7 @@ import logging
 import json
 import datetime
 import copy
+import hashlib
 from collections import defaultdict
 
 import redis
@@ -14,6 +15,7 @@ from pymysqlreplication.event import RotateEvent
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
 from elasticsearch.helpers import BulkIndexError
+from apscheduler.schedulers.blocking import BlockingScheduler
 
 import row_handlers
 import row_filters
@@ -263,8 +265,82 @@ def handle_binlog_stream(config):
                         cache.set_log_pos(binlogevent.packet.log_pos)
 
 
+def handle_cron_stream(config):
+    connection = config.CONNECTION
+    to_dest = ToDest(config)
+    r = redis.Redis(decode_responses=True, **config.REDIS)
+
+    def do_one_task(task):
+        import peewee
+        from peewee import MySQLDatabase
+
+        db = MySQLDatabase(task["stream"]["database"],
+                           **{'host': connection["host"], 'password': connection["passwd"], 'port': connection["port"],
+                              'user': connection["user"]})
+
+        pk = task["stream"].get("pk")
+        if not pk:
+            pk = {"field": "id", "type": "int"}
+
+        class MyModel(peewee.Model):
+            _pk = {"char": peewee.CharField(primary_key=True), "int": peewee.IntegerField(primary_key=True)}[pk["type"]]
+
+            class Meta:
+                database = db
+
+        setattr(MyModel, pk["field"], MyModel._pk)
+
+        # 替换 sql 中的 `?` 为上次执行 sql 语句的时间
+        md5 = hashlib.md5(config.__name__ + task["stream"]["database"] + task["stream"]["sql"]).hexdigest()
+        start_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        last_start_time = r.get(md5)
+        if not last_start_time:
+            if task["stream"].get("init_time"):
+                last_start_time = task["stream"].get("init_time")
+            else:
+                last_start_time = start_time
+
+        query = MyModel.raw(task["stream"]["sql"].replace("?", "%s"), (last_start_time,)).dicts().iterator()
+        for row in query:
+            for job in task["jobs"]:
+                event = {"action": "insert", "values": row}
+
+                watched = job.get("watched") or job.get("filters")
+                if watched:
+                    func_name, kwargs = watched.items()[0]
+                    func = getattr(row_filters, func_name)
+                    is_ok = func(event, **kwargs)
+                    if not is_ok:
+                        continue
+
+                rows = do_pipeline(job["pipeline"], event["values"])
+                to_dest.make_docs(job["dest"], rows)
+                if len(to_dest.docs) >= to_dest.bulk_size:
+                    to_dest.upload_docs()
+        db.close()
+        to_dest.upload_docs()
+        r.set(md5, start_time)
+
+    scheduler = BlockingScheduler()
+    for task_ in config.TASKS:
+        if task_["stream"].get("init_time") and task_["stream"].get("init_force"):
+            md5_ = hashlib.md5(config.__name__ + task_["stream"]["database"] + task_["stream"]["sql"]).hexdigest()
+            r.set(md5_, task_["stream"].get("init_time"))
+
+        scheduler.add_job(
+            do_one_task,
+            trigger="interval",
+            args=(task_,),
+            max_instances=1,
+            coalesce=True,
+            seconds=task_["stream"]["seconds"],
+            next_run_time=datetime.datetime.now()
+        )
+    scheduler.start()
+
+
 if __name__ == "__main__":
-    # sys.argv = ["./config/example_binlog.py"]
+    # sys.argv = ["./config/example_cron.py"]
     config_path = sys.argv[-1]
     config_module = importlib.import_module(
         ".".join(config_path[:-3].split("/")[-2:]),
@@ -277,3 +353,5 @@ if __name__ == "__main__":
         handle_init_stream(config_module)
     elif config_module.STREAM == "BINLOG":
         handle_binlog_stream(config_module)
+    elif config_module.STREAM == "CRON":
+        handle_cron_stream(config_module)
