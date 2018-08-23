@@ -313,6 +313,50 @@ TASKS = [
 ] 
 ```
 
+### 同步删除文档
+
+只有 ***binlog* 同步** 能实现删除 *elasticsearch* 中的文档，配置如下：
+
+```python
+TASKS = [
+    {
+        "stream": {
+            "database": "test_db",
+            "table": "person"
+        },
+        "jobs": [
+            # 插入、更新
+            {
+                "actions": ["insert", "update"],
+                "pipeline": [
+                    {"set_id": {"field": "id"}}  # 设置 id 字段的值为 es 中文档 _id
+                ],
+                "dest": {
+                    "es": {
+                        "action": "upsert",
+                        ...
+                    }
+                }
+            },
+            # 重点在这里，配置删除
+            {
+                "actions": ["delete"],  # 当读取到 binlog 中该表的删除操作时
+                "pipeline": [{"set_id": {"field": "id"}}],  # 要删除的文档 _id
+                "dest": {
+                    "es": {
+                        "action": "delete",  # 在 es 中执行删除操作
+                        ...  # 与上面的 index 和 type 相同
+                    }
+                }
+            }
+        ]
+    },
+    ...
+]
+```
+
+
+
 ### 更多示例正在更新
 
 ## 常见问题
