@@ -1,4 +1,4 @@
-![Alt text](https://github.com/m358807551/images/blob/master/images/MysqlsMom.jpeg?raw=true)
+![Alt text](https://github.com/m358807551/images/blob/master/images/mysqlsmom/mysqlsmom_red.png?raw=true)
 
 ## 简介
 
