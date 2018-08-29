@@ -1,0 +1,653 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="zh-CN" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="zh-CN" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>简介 &mdash; mysqlsmom 0.1.6 文档</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="搜索" href="search.html" />
+    <link rel="prev" title="Welcome to mysqlsmom’s documentation!" href="index.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> mysqlsmom
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#">快速开始</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#">安装</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#">设置同步配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#">开始同步</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#">注意</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">版本升级</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#">增量同步</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#binlog">分析 <em>binlog</em> 的增量同步</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#">基于更新时间的增量同步</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">组织架构</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#mysqlsmom"><em>Mysqlsmom</em> 使用实战</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#">同步多张表</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#">一张表同步到多个索引</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#">只同步某些字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#">字段重命名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#">切分字符串为数组</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#">同步删除文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#">更多示例正在更新</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">常见问题</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#">为什么我的增量同步不及时？</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#">待改进</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#">未完待续</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">mysqlsmom</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>简介</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/hello.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <p><img alt="Alt text" src="https://github.com/m358807551/images/blob/master/images/MysqlsMom.jpeg?raw=true" /></p>
+<div class="section" id="">
+<span id="id1"></span><h1>简介<a class="headerlink" href="#" title="永久链接至标题">¶</a></h1>
+<p>一个 同步 Mysql 数据到 Elasticsearch的工具，特色是支持分析 binlog 做实时增量同步，以及支持编写自定义逻辑处理数据后再同步到 es。</p>
+<p>纯 Python 编写，运行 mysqlsmom 的唯三要求:</p>
+<ul class="simple">
+<li>python2.7</li>
+<li>redis</li>
+<li><em>Mysql</em> 配置  <em>binlog-format=row</em></li>
+</ul>
+</div>
+<div class="section" id="">
+<span id="id2"></span><h1>快速开始<a class="headerlink" href="#" title="永久链接至标题">¶</a></h1>
+<p>从一个全量同步开始。</p>
+<div class="section" id="">
+<span id="id3"></span><h2>安装<a class="headerlink" href="#" title="永久链接至标题">¶</a></h2>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install mysqlsmom
+</pre></div>
+</div>
+<p>然后指定 elasticsearch 版本（默认支持2.4），支持其它版本请运行（将5.4换成需要的elasticsearch版本）</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install --upgrade <span class="nv">elasticsearch</span><span class="o">==</span><span class="m">5</span>.4
+</pre></div>
+</div>
+</div>
+<div class="section" id="">
+<span id="id4"></span><h2>设置同步配置<a class="headerlink" href="#" title="永久链接至标题">¶</a></h2>
+<p>创建全量同步配置文件</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mom new test_mom/init_config.py -t init --force
+</pre></div>
+</div>
+<p>此时的目录结构</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>└── test_mom
+    └── init_config.py
+</pre></div>
+</div>
+<p>编辑同步配置</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>vim ./test_mom/init_config.py  <span class="c1"># 按注释提示修改配置</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="">
+<span id="id5"></span><h2>开始同步<a class="headerlink" href="#" title="永久链接至标题">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mom</span> <span class="n">run</span> <span class="o">-</span><span class="n">c</span> <span class="o">./</span><span class="n">test_mom</span><span class="o">/</span><span class="n">init_config</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>等待同步完成即可。</p>
+</div>
+<div class="section" id="">
+<span id="id6"></span><h2>注意<a class="headerlink" href="#" title="永久链接至标题">¶</a></h2>
+<p>全量同步完成后不会自动增量同步新修改的数据，需要增量同步请查看全部文档中的增量同步部分。</p>
+</div>
+</div>
+<div class="section" id="">
+<span id="id7"></span><h1>版本升级<a class="headerlink" href="#" title="永久链接至标题">¶</a></h1>
+<p>本次更新只是加入了对 pip install mysqlsmom 以及 命令行的支持，关键代码并无任何改动。</p>
+<p>通过旧版本 git clone 和 python mysqlsmom.py ./config/xxx.py 运行同步的用户 <strong>无需</strong> 更新代码，稍后加入对升级步骤的详细说明。</p>
+</div>
+<div class="section" id="">
+<span id="id8"></span><h1>增量同步<a class="headerlink" href="#" title="永久链接至标题">¶</a></h1>
+<div class="section" id="binlog">
+<span id="binlog"></span><h2>分析 <em>binlog</em> 的增量同步<a class="headerlink" href="#binlog" title="永久链接至标题">¶</a></h2>
+<ol>
+<li><p class="first">确保要增量同步的MySql数据库开启binlog，且开启redis(为了存储最后一次读到的binlog文件名及读到的位置。未来可能支持本地文件存储该信息。)</p>
+</li>
+<li><p class="first">新建配置文件</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mom new test_mom/binlog_config.py -t binlog --force
+</pre></div>
+</div>
+</li>
+<li><p class="first">编辑 test_mom/binlog_config.py，按<strong>注释</strong>提示修改配置；</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># coding=utf-8</span>
+
+<span class="n">STREAM</span> <span class="o">=</span> <span class="s2">&quot;BINLOG&quot;</span>
+<span class="n">SERVER_ID</span> <span class="o">=</span> <span class="mi">99</span>  <span class="c1"># 确保每个用于binlog同步的配置文件的SERVER_ID不同；</span>
+<span class="n">SLAVE_UUID</span> <span class="o">=</span> <span class="vm">__name__</span>
+
+<span class="c1"># 配置开启binlog权限的MySql连接</span>
+<span class="n">BINLOG_CONNECTION</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="mi">3306</span><span class="p">,</span>
+    <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="s1">&#39;root&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;passwd&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span>
+<span class="p">}</span>
+
+<span class="c1"># 配置es节点</span>
+<span class="n">NODES</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">9200</span><span class="p">}]</span>
+
+<span class="n">TASKS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;stream&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;database&quot;</span><span class="p">:</span> <span class="s2">&quot;test_db&quot;</span><span class="p">,</span>  <span class="c1"># [table]所在的数据库</span>
+            <span class="s2">&quot;table&quot;</span><span class="p">:</span> <span class="s2">&quot;person&quot;</span>  <span class="c1"># 监控该表的binlog</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;jobs&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;actions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;insert&quot;</span><span class="p">,</span> <span class="s2">&quot;update&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;pipeline&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span><span class="s2">&quot;only_fields&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">]}},</span>  <span class="c1"># 只同步这些字段到es，注释掉该行则同步全部字段的值到es</span>
+                    <span class="p">{</span><span class="s2">&quot;set_id&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;id&quot;</span><span class="p">}}</span>  <span class="c1"># 设置es中文档_id的值取自 id(或根据需要更改)字段</span>
+                <span class="p">],</span>
+                <span class="s2">&quot;dest&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;es&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;upsert&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="s2">&quot;test_index&quot;</span><span class="p">,</span>  <span class="c1"># 设置 index</span>
+                        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>         <span class="c1"># 设置 type</span>
+                        <span class="s2">&quot;nodes&quot;</span><span class="p">:</span> <span class="n">NODES</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">运行</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mom run -c ./test_mom/binlog_config.py
+</pre></div>
+</div>
+<p>该进程会一直运行，实时同步新增和更改后的数据到elasticsearch；</p>
+<p>注意：第一次运行该进程时不会同步MySql中已存在的数据，从第二次运行开始，将接着上次同步停止时的位置继续同步；</p>
+<p>同步旧数据请看<em>全量同步MySql数据到es</em>；</p>
+</li>
+</ol>
+</div>
+<div class="section" id="">
+<span id="id9"></span><h2>基于更新时间的增量同步<a class="headerlink" href="#" title="永久链接至标题">¶</a></h2>
+<p>若 <em>Mysql</em> 表中有类似 <code class="docutils literal notranslate"><span class="pre">update_time</span></code> 的时间字段，且在每次插入、更新数据后将该字段的值设置为操作时间，则可在不用开启 <em>binlog</em> 的情况下进行增量同步。</p>
+<ol>
+<li><p class="first">新建配置文件</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mom</span> <span class="n">new</span> <span class="n">test_mom</span><span class="o">/</span><span class="n">cron_config</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">t</span> <span class="n">cron</span> <span class="o">--</span><span class="n">force</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">编辑 test_mom/cron_config.py，按<strong>注释</strong>提示修改配置；</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># coding=utf-8</span>
+
+<span class="n">STREAM</span> <span class="o">=</span> <span class="s2">&quot;CRON&quot;</span>
+
+<span class="c1"># 修改数据库连接</span>
+<span class="n">CONNECTION</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="mi">3306</span><span class="p">,</span>
+    <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="s1">&#39;root&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;passwd&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span>
+<span class="p">}</span>
+
+<span class="c1"># redis存储上次同步时间等信息</span>
+<span class="n">REDIS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">6379</span><span class="p">,</span>
+    <span class="s2">&quot;db&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;password&quot;</span><span class="p">,</span>  <span class="c1"># 不需要密码则注释或删掉该行</span>
+<span class="p">}</span>
+
+<span class="c1"># 一次同步 BULK_SIZE 条数据到elasticsearch，不设置该配置项默认为1</span>
+<span class="n">BULK_SIZE</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="c1"># 修改elasticsearch节点</span>
+<span class="n">NODES</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">9200</span><span class="p">}]</span>
+
+<span class="n">TASKS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;stream&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;database&quot;</span><span class="p">:</span> <span class="s2">&quot;test_db&quot;</span><span class="p">,</span>  <span class="c1"># 在此数据库执行sql语句</span>
+            <span class="s2">&quot;sql&quot;</span><span class="p">:</span> <span class="s2">&quot;select id, name from person where update_time &gt;= ?&quot;</span><span class="p">,</span>  <span class="c1"># 将该sql语句选中的数据同步到 elasticsearch</span>
+            <span class="s2">&quot;seconds&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>  <span class="c1"># 每隔 seconds 秒同步一次,</span>
+            <span class="s2">&quot;init_time&quot;</span><span class="p">:</span> <span class="s2">&quot;2018-08-15 18:05:47&quot;</span>  <span class="c1"># 只有第一次同步会加载</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;jobs&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;pipeline&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span><span class="s2">&quot;set_id&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;id&quot;</span><span class="p">}}</span>  <span class="c1"># 默认设置 id字段的值 为 es 中的文档id</span>
+                <span class="p">],</span>
+                <span class="s2">&quot;dest&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;es&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;upsert&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="s2">&quot;test_index&quot;</span><span class="p">,</span>   <span class="c1"># 设置 index</span>
+                        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span>          <span class="c1"># 设置 type</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">运行</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mom run -c ./test_mom/cron_config.py
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="">
+<span id="id10"></span><h1>组织架构<a class="headerlink" href="#" title="永久链接至标题">¶</a></h1>
+<p><img alt="Alt text" src="https://github.com/m358807551/images/blob/master/images/mysqlsmom/all.png?raw=true" /></p>
+</div>
+<div class="section" id="mysqlsmom">
+<span id="mysqlsmom"></span><h1><em>Mysqlsmom</em> 使用实战<a class="headerlink" href="#mysqlsmom" title="永久链接至标题">¶</a></h1>
+<p><em>Mysqlsmom</em> 的灵活性依赖于：</p>
+<ul class="simple">
+<li>在 <em>row_handlers.py</em> 中添加自定义函数对取自Mysql的数据进行二次加工。</li>
+<li>在 <em>row_filters.py</em> 中添加自定义函数决定是否要同步某一条数据。</li>
+<li>在 <em>config/</em> 目录下的任意配置文件应用上面的函数。</li>
+</ul>
+<p>如果不了解 Python 也没关系，上述两个文件中自带的函数足以应付大多数种情况，遇到特殊的同步需求可以在 Github 发起 issue 或通过微信、QQ联系作者。</p>
+<div class="section" id="">
+<span id="id11"></span><h2>同步多张表<a class="headerlink" href="#" title="永久链接至标题">¶</a></h2>
+<p>在一个配置文件中即可完成：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="n">TASKS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="c1"># 同步表1</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;stream&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;database&quot;</span><span class="p">:</span> <span class="s2">&quot;数据库名1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;table&quot;</span><span class="p">:</span> <span class="s2">&quot;表名1&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;jobs&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span>
+    <span class="p">}</span>
+    <span class="c1"># 同步表2</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;stream&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;database&quot;</span><span class="p">:</span> <span class="s2">&quot;数据库名2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;table&quot;</span><span class="p">:</span> <span class="s2">&quot;表名2&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;jobs&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>一个 <em>Mysql Connection</em> 对应<strong>一个</strong>配置文件。</p>
+</div>
+<div class="section" id="">
+<span id="id12"></span><h2>一张表同步到多个索引<a class="headerlink" href="#" title="永久链接至标题">¶</a></h2>
+<p>分为两种情况。</p>
+<p>一种是把相同的数据同步到不同的索引，配置如下：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="n">TASKS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;stream&quot;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
+        <span class="s2">&quot;jobs&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;actions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
+                <span class="s2">&quot;pipeline&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>
+                <span class="s2">&quot;dest&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="c1"># 同步到索引1</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;es&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;upsert&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="s2">&quot;索引1&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;类型1&quot;</span><span class="p">,</span> <span class="s2">&quot;nodes&quot;</span><span class="p">:</span> <span class="n">NODES</span><span class="p">},</span>
+                    <span class="p">},</span>
+                    <span class="c1"># 同步到索引2</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;es&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;upsert&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="s2">&quot;索引2&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;类型2&quot;</span><span class="p">,</span> <span class="s2">&quot;nodes&quot;</span><span class="p">:</span> <span class="n">NODES</span><span class="p">},</span>
+                    <span class="p">}</span>
+                <span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="o">...</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>另一种是把同一个表产生的数据经过不同的 <em>pipeline</em> 同步到不同的索引：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="n">TASKS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;stream&quot;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
+        <span class="s2">&quot;jobs&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;actions&quot;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
+                <span class="s2">&quot;pipeline&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>  <span class="c1"># 对数据经过一系列处理</span>
+                <span class="s2">&quot;dest&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;es&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="s2">&quot;索引1&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">}}</span>  <span class="c1"># 同步到索引1</span>
+            <span class="p">},</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;actions&quot;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>
+                <span class="s2">&quot;pipeline&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>  <span class="c1"># 与上面的pipeline不同</span>
+                <span class="s2">&quot;dest&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;es&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="s2">&quot;索引2&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">}}</span>  <span class="c1"># 同步到索引2</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><em>TASKS</em> 中的每一项对应一张要同步的表。</li>
+<li><em>jobs</em> 中的每一项对应对一条记录的一种处理方式。</li>
+<li><em>dest</em> 中的每一项对应一个es索引类型。</li>
+</ul>
+</div>
+<div class="section" id="">
+<span id="id13"></span><h2>只同步某些字段<a class="headerlink" href="#" title="永久链接至标题">¶</a></h2>
+<p>对每条来自 <em>Mysql</em> 的 记录的处理都在 <strong>pipeline</strong> 中进行处理。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;pipeline&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s2">&quot;only_fields&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">]}},</span>  <span class="c1"># 只同步 id 和 name字段</span>
+    <span class="p">{</span><span class="s2">&quot;set_id&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;id&quot;</span><span class="p">}}</span>  <span class="c1"># 然后设置 id 字段为es中文档的_id</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="">
+<span id="id14"></span><h2>字段重命名<a class="headerlink" href="#" title="永久链接至标题">¶</a></h2>
+<p>对于 <em>Mysql</em> 中的字段名和 <em>elasticsearch</em> 中的域名不一致的情况：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;pipeline&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="c1"># 将name重命名为name1，age 重命名为age1</span>
+    <span class="p">{</span><span class="s2">&quot;replace_fields&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;name1&quot;</span><span class="p">],</span> <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;age1&quot;</span><span class="p">]}},</span>
+    <span class="p">{</span><span class="s2">&quot;set_id&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;id&quot;</span><span class="p">}}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p><em>pipeline</em> 会依次执行处理函数，上面的例子等价于：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;pipeline&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="c1"># 先重命名 name 为 name1</span>
+    <span class="p">{</span><span class="s2">&quot;replace_fields&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;name1&quot;</span><span class="p">]}},</span>
+    <span class="c1"># 再重命名 age 为 age1</span>
+    <span class="p">{</span><span class="s2">&quot;replace_fields&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;age1&quot;</span><span class="p">]}},</span>
+    <span class="p">{</span><span class="s2">&quot;set_id&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;id&quot;</span><span class="p">}}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>还有一种特殊情形，es 中两个字段存相同的数据，但是分词方式不同。</p>
+<p>例如 <em>name_default</em> 的分析器为 <em>default</em>，<em>name_raw</em> 设置为不分词，需要将 <em>name</em> 的值同时同步到这两个域：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;pipeline&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s2">&quot;replace_fields&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;name_default&quot;</span><span class="p">,</span> <span class="s2">&quot;name_raw&quot;</span><span class="p">]}},</span>
+    <span class="p">{</span><span class="s2">&quot;set_id&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;id&quot;</span><span class="p">}}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>当然上述问题有一个更好的解决方案，在 <em>es</em> 的 <em>mappings</em> 中配置 <em>name</em> 字段的 <em>fields</em> 属性即可，这超出了本文档的内容。</p>
+</div>
+<div class="section" id="">
+<span id="id15"></span><h2>切分字符串为数组<a class="headerlink" href="#" title="永久链接至标题">¶</a></h2>
+<p>有时 Mysql 存储字符串类似：”aaa|bbb|ccc”，希望转化成数组: [“aaa”, “bbb”, “ccc”] 再进行同步</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;pipeline&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="c1"># tags 存储类似&quot;aaa|bbb|ccc&quot;的字符串，将 tags 字段的值按符号 `|` 切分成数组</span>
+    <span class="p">{</span><span class="s2">&quot;split&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;tags&quot;</span><span class="p">,</span> <span class="s2">&quot;flag&quot;</span><span class="p">:</span> <span class="s2">&quot;|&quot;</span><span class="p">}},</span>
+    <span class="p">{</span><span class="s2">&quot;set_id&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;id&quot;</span><span class="p">}}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="">
+<span id="id16"></span><h2>同步删除文档<a class="headerlink" href="#" title="永久链接至标题">¶</a></h2>
+<p>只有 <strong><em>binlog</em> 同步</strong> 能实现删除 <em>elasticsearch</em> 中的文档，配置如下：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">TASKS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;stream&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;database&quot;</span><span class="p">:</span> <span class="s2">&quot;test_db&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;table&quot;</span><span class="p">:</span> <span class="s2">&quot;person&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;jobs&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="c1"># 插入、更新</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;actions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;insert&quot;</span><span class="p">,</span> <span class="s2">&quot;update&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;pipeline&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span><span class="s2">&quot;set_id&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;id&quot;</span><span class="p">}}</span>  <span class="c1"># 设置 id 字段的值为 es 中文档 _id</span>
+                <span class="p">],</span>
+                <span class="s2">&quot;dest&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;es&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;upsert&quot;</span><span class="p">,</span>
+                        <span class="o">...</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">},</span>
+            <span class="c1"># 重点在这里，配置删除</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;actions&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;delete&quot;</span><span class="p">],</span>  <span class="c1"># 当读取到 binlog 中该表的删除操作时</span>
+                <span class="s2">&quot;pipeline&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;set_id&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;id&quot;</span><span class="p">}}],</span>  <span class="c1"># 要删除的文档 _id</span>
+                <span class="s2">&quot;dest&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;es&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="s2">&quot;delete&quot;</span><span class="p">,</span>  <span class="c1"># 在 es 中执行删除操作</span>
+                        <span class="o">...</span>  <span class="c1"># 与上面的 index 和 type 相同</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="o">...</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="">
+<span id="id17"></span><h2>更多示例正在更新<a class="headerlink" href="#" title="永久链接至标题">¶</a></h2>
+</div>
+</div>
+<div class="section" id="">
+<span id="id18"></span><h1>常见问题<a class="headerlink" href="#" title="永久链接至标题">¶</a></h1>
+<div class="section" id="">
+<span id="id19"></span><h2>为什么我的增量同步不及时？<a class="headerlink" href="#" title="永久链接至标题">¶</a></h2>
+<ol>
+<li><p class="first">连接本地数据库增量同步不及时</p>
+<p>该情况暂未收到过反馈，如能复现请联系作者。</p>
+</li>
+<li><p class="first">连接线上数据库发现增量同步不及时</p>
+<p>2.1 推荐使用内网IP连接数据库。连接线上数据库（如开启在阿里、腾讯服务器上的Mysql）时，推荐使用内网IP地址，因为外网IP会受到带宽等限制导致获取binlog数据速度受限，最终可能造成同步延时。</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="section" id="">
+<span id="id20"></span><h1>待改进<a class="headerlink" href="#" title="永久链接至标题">¶</a></h1>
+<ol class="simple">
+<li>据部分用户反馈，全量同步百万级以上的数据性能不佳。</li>
+</ol>
+</div>
+<div class="section" id="">
+<span id="id21"></span><h1>未完待续<a class="headerlink" href="#" title="永久链接至标题">¶</a></h1>
+<p>文档近期会较频繁更新，任何问题、建议都收到欢迎，请在issues留言，会在24小时内回复；或联系QQ、微信: 358807551；</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Welcome to mysqlsmom’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, MCTW.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.1.6',
+            LANGUAGE:'zh_CN',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="_static/translations.js"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

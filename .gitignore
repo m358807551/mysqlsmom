@@ -50,7 +50,7 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-build
+/build
 dist
 venv
 mysqlsmom.egg-info
