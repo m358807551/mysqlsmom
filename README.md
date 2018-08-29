@@ -10,6 +10,8 @@
 * redis
 * *Mysql* 配置  *binlog-format=row*
 
+中文文档地址：https://mysqlsmom.readthedocs.io/en/latest/
+
 ## 快速开始
 
 从一个全量同步开始。
