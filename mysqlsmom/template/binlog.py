@@ -19,7 +19,7 @@ REDIS = {
     "host": "127.0.0.1",
     "port": 6379,
     "db": 0,
-    "password": "your password",  # 不需要密码则注释或删掉该行
+    "password": "password",  # 不需要密码则注释或删掉该行
 }
 
 
@@ -50,3 +50,6 @@ TASKS = [
         ]
     }
 ]
+
+# CUSTOM_ROW_HANDLERS = "./my_handlers.py"
+# CUSTOM_ROW_FILTERS = "./my_filters.py"

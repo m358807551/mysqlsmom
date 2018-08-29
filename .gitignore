@@ -50,3 +50,12 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
+build
+dist
+venv
+mysqlsmom.egg-info
+.idea/180807_mysqlsmom.iml
+.idea/inspectionProfiles/
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml

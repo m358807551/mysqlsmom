@@ -6,9 +6,14 @@ import json
 import datetime
 import copy
 import hashlib
+import shutil
+import os
+import ntpath
 from collections import defaultdict
+from os.path import join, dirname, abspath, exists
 
 import redis
+import click
 from pymysqlreplication import BinLogStreamReader
 from pymysqlreplication.row_event import DeleteRowsEvent, WriteRowsEvent, UpdateRowsEvent
 from pymysqlreplication.event import RotateEvent
@@ -70,7 +75,7 @@ def do_pipeline(pipeline, row):
         row_ = []
         for r in row:
             func_name, kwargs = line.items()[0]
-            func = getattr(row_handlers, func_name)
+            func = getattr(custom_rowhandlers, func_name, None) or getattr(row_handlers, func_name)
             r_new = func(r, **kwargs)
             if isinstance(r_new, dict):
                 row_.append(r_new)
@@ -168,11 +173,21 @@ def handle_init_stream(config):
                     "action": "insert",
                     "values": row
                 }
-                if event["action"] in job["actions"]:
-                    rows = do_pipeline(job["pipeline"], event["values"])
-                    to_dest.make_docs(job["dest"], rows)
-                    if len(to_dest.docs) >= to_dest.bulk_size:
-                        to_dest.upload_docs()
+                if event["action"] not in job["actions"]:
+                    continue
+
+                watched = job.get("watched")
+                if watched:
+                    func_name, kwargs = watched.items()[0]
+                    func = getattr(custom_rowfilters, func_name, None) or getattr(row_filters, func_name)
+                    is_ok = func(event, **kwargs)
+                    if not is_ok:
+                        continue
+
+                rows = do_pipeline(job["pipeline"], event["values"])
+                to_dest.make_docs(job["dest"], rows)
+                if len(to_dest.docs) >= to_dest.bulk_size:
+                    to_dest.upload_docs()
         db.close()
         to_dest.upload_docs()
 
@@ -251,7 +266,7 @@ def handle_binlog_stream(config):
                     watched = job.get("watched")
                     if watched:
                         func_name, kwargs = watched.items()[0]
-                        func = getattr(row_filters, func_name)
+                        func = getattr(custom_rowfilters, func_name, None) or getattr(row_filters, func_name)
                         is_ok = func(event, **kwargs)
                         if not is_ok:
                             continue
@@ -308,7 +323,7 @@ def handle_cron_stream(config):
                 watched = job.get("watched") or job.get("filters")
                 if watched:
                     func_name, kwargs = watched.items()[0]
-                    func = getattr(row_filters, func_name)
+                    func = getattr(custom_rowfilters, func_name, None) or getattr(row_filters, func_name)
                     is_ok = func(event, **kwargs)
                     if not is_ok:
                         continue
@@ -339,19 +354,89 @@ def handle_cron_stream(config):
     scheduler.start()
 
 
-if __name__ == "__main__":
-    # sys.argv = ["./config/example_cron.py"]
-    config_path = sys.argv[-1]
-    config_module = importlib.import_module(
-        ".".join(config_path[:-3].split("/")[-2:]),
-        "config"
+@click.group()
+def cli():
+    pass
+
+
+@cli.command(help="'create a config file'")
+@click.option('-t', '--template', type=click.Choice(['init', 'binlog', 'cron']), required=True)
+@click.option('--force/--no-force', default=False)
+@click.argument('path', type=click.Path(resolve_path=True), nargs=1)
+def new(template, force, path):
+    real_path = click.format_filename(path)
+    dir_ = abspath(dirname(real_path))
+    if not exists(dir_):
+        if force:
+            os.makedirs(dir_)
+    shutil.copyfile(
+        join(abspath(dirname(__file__)), "template", template + ".py"),
+        real_path
     )
+    click.echo(u"new config at " + real_path)
 
-    es = Elasticsearch(getattr(config_module, "NODES"))
 
-    if config_module.STREAM == "INIT":
-        handle_init_stream(config_module)
-    elif config_module.STREAM == "BINLOG":
-        handle_binlog_stream(config_module)
-    elif config_module.STREAM == "CRON":
-        handle_cron_stream(config_module)
+click.argument('template', type=click.Path(exists=True, resolve_path=True))
+
+
+es = None
+custom_rowhandlers = None
+
+
+@cli.command(help="'run a config file'")
+@click.option('-c', '--config', type=click.Path(exists=True, resolve_path=True), required=True, help="config file path")
+def run(config):
+    config_path = click.format_filename(config)
+
+    config_ = load_config(config_path)
+
+    path = getattr(config_, "CUSTOM_ROW_HANDLERS", None)
+    if path:
+        template_dir = abspath(dirname(config_path))
+        dir_, filename = ntpath.split(join(template_dir, path))
+        sys.path.append(dir_)
+        global custom_rowhandlers
+        custom_rowhandlers = importlib.import_module(filename[:-3])
+
+    path = getattr(config_, "CUSTOM_ROW_FILTERS", None)
+    if path:
+        template_dir = abspath(dirname(config_path))
+        dir_, filename = ntpath.split(join(template_dir, path))
+        sys.path.append(dir_)
+        global custom_rowfilters
+        custom_rowfilters = importlib.import_module(filename[:-3])
+
+    global es
+    es = Elasticsearch(config_.NODES)
+
+    if config_.STREAM == "INIT":
+        handle_init_stream(config_)
+    elif config_.STREAM == "BINLOG":
+        handle_binlog_stream(config_)
+    elif config_.STREAM == "CRON":
+        handle_cron_stream(config_)
+
+
+def load_config(path):
+    dir_, filename = ntpath.split(path)
+    sys.path.append(dir_)
+    return importlib.import_module(filename.split(".")[0])
+
+
+@cli.command(help="'control a sync'")
+@click.option('-c', '--config_path', type=click.Path(exists=True, resolve_path=True), required=True, help="config file path")
+def ctl(config_path):
+    config_path = click.format_filename(config_path)
+    config = load_config(config_path)
+    if config.STREAM == "BINLOG":
+        cache = Cache(config)
+        click.echo(cache.get_log_file())
+        click.echo(cache.get_log_pos())
+    elif config.STREAM == "CRON":
+        pass
+
+custom_rowfilters = None
+
+
+if __name__ == "__main__":
+    cli()

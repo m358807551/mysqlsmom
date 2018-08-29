@@ -1,4 +1,7 @@
-appnope==0.1.0
+from setuptools import setup, find_packages
+
+
+install_requires = """appnope==0.1.0
 APScheduler==3.5.1
 asn1crypto==0.24.0
 backports.shutil-get-terminal-size==1.0.0
@@ -6,6 +9,7 @@ blinker==1.4
 certifi==2018.4.16
 cffi==1.11.5
 chardet==3.0.4
+click==6.7
 cryptography==2.2.2
 decorator==4.3.0
 elasticsearch==2.4.0
@@ -37,3 +41,22 @@ tzlocal==1.5.1
 urllib3==1.23
 wcwidth==0.1.7
 yolk==0.4.3
+"""
+
+setup(
+    name='mysqlsmom',
+    version='0.1.6',
+    keywords='mysql elasticsearch es sync',
+    description='sync data from mysql to elasticsearch',
+    license='MIT License',
+    url='https://github.com/m358807551/mysqlsmom',
+    author='MCTW',
+    author_email='m358807551@163.com',
+    packages=find_packages(),
+    include_package_data=True,
+    platforms='any',
+    install_requires=install_requires.split("\n"),
+    entry_points={
+        'console_scripts': ['mom = mysqlsmom.mysqlsmom:cli'],
+    }
+)
