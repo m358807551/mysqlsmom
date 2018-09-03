@@ -63,7 +63,10 @@ class DateEncoder(json.JSONEncoder):
         elif isinstance(obj, datetime.date):
             return '{0.year:4d}-{0.month:02d}-{0.day:02d}'.format(obj)
         else:
-            return json.JSONEncoder.default(self, obj)
+            try:
+                return json.JSONEncoder.default(self, obj)
+            except TypeError:
+                return str(obj)
 
 
 def do_pipeline(pipeline, row):
