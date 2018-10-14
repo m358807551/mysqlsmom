@@ -104,6 +104,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#">更多示例正在更新</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="#">自定义处理函数</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#">自定义函数的格式</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="#">常见问题</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#">为什么我的增量同步不及时？</a></li>
 </ul>
@@ -174,7 +178,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <p><img alt="Alt text" src="https://github.com/m358807551/images/blob/master/images/MysqlsMom.jpeg?raw=true" /></p>
+  <p><img alt="Alt text" src="https://github.com/m358807551/images/blob/master/images/mysqlsmom/mysqlsmom_red.png?raw=true" /></p>
 <div class="section" id="">
 <span id="id1"></span><h1>简介<a class="headerlink" href="#" title="永久链接至标题">¶</a></h1>
 <p>一个 同步 Mysql 数据到 Elasticsearch的工具，特色是支持分析 binlog 做实时增量同步，以及支持编写自定义逻辑处理数据后再同步到 es。</p>
@@ -469,7 +473,7 @@
 <span id="id13"></span><h2>只同步某些字段<a class="headerlink" href="#" title="永久链接至标题">¶</a></h2>
 <p>对每条来自 <em>Mysql</em> 的 记录的处理都在 <strong>pipeline</strong> 中进行处理。</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;pipeline&quot;</span><span class="p">:</span> <span class="p">[</span>
-    <span class="p">{</span><span class="s2">&quot;only_fields&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">]}},</span>  <span class="c1"># 只同步 id 和 name字段</span>
+  <span class="p">{</span><span class="s2">&quot;only_fields&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;fields&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">]}},</span>  <span class="c1"># 只同步 id 和 name字段</span>
     <span class="p">{</span><span class="s2">&quot;set_id&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;id&quot;</span><span class="p">}}</span>  <span class="c1"># 然后设置 id 字段为es中文档的_id</span>
 <span class="p">]</span>
 </pre></div>
@@ -480,7 +484,7 @@
 <p>对于 <em>Mysql</em> 中的字段名和 <em>elasticsearch</em> 中的域名不一致的情况：</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;pipeline&quot;</span><span class="p">:</span> <span class="p">[</span>
     <span class="c1"># 将name重命名为name1，age 重命名为age1</span>
-    <span class="p">{</span><span class="s2">&quot;replace_fields&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;name1&quot;</span><span class="p">],</span> <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;age1&quot;</span><span class="p">]}},</span>
+  <span class="p">{</span><span class="s2">&quot;replace_fields&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;name1&quot;</span><span class="p">],</span> <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;age1&quot;</span><span class="p">]}},</span>
     <span class="p">{</span><span class="s2">&quot;set_id&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;id&quot;</span><span class="p">}}</span>
 <span class="p">]</span>
 </pre></div>
@@ -488,7 +492,7 @@
 <p><em>pipeline</em> 会依次执行处理函数，上面的例子等价于：</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;pipeline&quot;</span><span class="p">:</span> <span class="p">[</span>
     <span class="c1"># 先重命名 name 为 name1</span>
-    <span class="p">{</span><span class="s2">&quot;replace_fields&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;name1&quot;</span><span class="p">]}},</span>
+  <span class="p">{</span><span class="s2">&quot;replace_fields&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;name1&quot;</span><span class="p">]}},</span>
     <span class="c1"># 再重命名 age 为 age1</span>
     <span class="p">{</span><span class="s2">&quot;replace_fields&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;age1&quot;</span><span class="p">]}},</span>
     <span class="p">{</span><span class="s2">&quot;set_id&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;id&quot;</span><span class="p">}}</span>
@@ -498,7 +502,7 @@
 <p>还有一种特殊情形，es 中两个字段存相同的数据，但是分词方式不同。</p>
 <p>例如 <em>name_default</em> 的分析器为 <em>default</em>，<em>name_raw</em> 设置为不分词，需要将 <em>name</em> 的值同时同步到这两个域：</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;pipeline&quot;</span><span class="p">:</span> <span class="p">[</span>
-    <span class="p">{</span><span class="s2">&quot;replace_fields&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;name_default&quot;</span><span class="p">,</span> <span class="s2">&quot;name_raw&quot;</span><span class="p">]}},</span>
+  <span class="p">{</span><span class="s2">&quot;replace_fields&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;name_default&quot;</span><span class="p">,</span> <span class="s2">&quot;name_raw&quot;</span><span class="p">]}},</span>
     <span class="p">{</span><span class="s2">&quot;set_id&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;id&quot;</span><span class="p">}}</span>
 <span class="p">]</span>
 </pre></div>
@@ -509,8 +513,8 @@
 <span id="id15"></span><h2>切分字符串为数组<a class="headerlink" href="#" title="永久链接至标题">¶</a></h2>
 <p>有时 Mysql 存储字符串类似：”aaa|bbb|ccc”，希望转化成数组: [“aaa”, “bbb”, “ccc”] 再进行同步</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;pipeline&quot;</span><span class="p">:</span> <span class="p">[</span>
-    <span class="c1"># tags 存储类似&quot;aaa|bbb|ccc&quot;的字符串，将 tags 字段的值按符号 `|` 切分成数组</span>
-    <span class="p">{</span><span class="s2">&quot;split&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;tags&quot;</span><span class="p">,</span> <span class="s2">&quot;flag&quot;</span><span class="p">:</span> <span class="s2">&quot;|&quot;</span><span class="p">}},</span>
+  <span class="c1"># tags 存储类似&quot;aaa|bbb|ccc&quot;的字符串，将 tags 字段的值按符号 `|` 切分成数组</span>
+  <span class="p">{</span><span class="s2">&quot;split&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;tags&quot;</span><span class="p">,</span> <span class="s2">&quot;flag&quot;</span><span class="p">:</span> <span class="s2">&quot;|&quot;</span><span class="p">}},</span>
     <span class="p">{</span><span class="s2">&quot;set_id&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;id&quot;</span><span class="p">}}</span>
 <span class="p">]</span>
 </pre></div>
@@ -562,9 +566,70 @@
 </div>
 </div>
 <div class="section" id="">
-<span id="id18"></span><h1>常见问题<a class="headerlink" href="#" title="永久链接至标题">¶</a></h1>
+<span id="id18"></span><h1>自定义处理函数<a class="headerlink" href="#" title="永久链接至标题">¶</a></h1>
+<p>所有 row_handlers.py 文件里的函数都支持在 pipeline 里使用。</p>
+<p>每一个同步任务都有一个 pipeline 配置，从 Mysql 取出的数据经过 pipeline 里的函数处理后传入es；每个处理函数的输入都是上一个处理函数的输出；</p>
+<p>除此之外，可以自定义处理函数，以 binlog 同步为例：</p>
+<ol class="simple">
+<li>在同步配置文件的同一目录下创建文件：<code class="docutils literal notranslate"><span class="pre">my_handlers.py</span></code></li>
+<li>修改同步的配置文件，取消倒数第二行 <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">CUSTOM_ROW_HANDLERS</span> <span class="pre">=</span> <span class="pre">&quot;./my_handlers.py&quot;</span></code>的注释</li>
+<li>在<code class="docutils literal notranslate"><span class="pre">my_handlers.py</span></code>中编写自定义函数，写好的函数可以直接在 pipeline 中使用。</li>
+</ol>
 <div class="section" id="">
-<span id="id19"></span><h2>为什么我的增量同步不及时？<a class="headerlink" href="#" title="永久链接至标题">¶</a></h2>
+<span id="id19"></span><h2>自定义函数的格式<a class="headerlink" href="#" title="永久链接至标题">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">my_handlers.py</span></code>的文件内容按照如下格式</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># coding=utf-8</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+
+<span class="c1"># 示例自定义函数，将 my_field 字段的值改为 my_value</span>
+<span class="k">def</span> <span class="nf">my_func</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">my_field</span><span class="p">,</span> <span class="n">my_value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    参数 row: 这个参数一定要有，是一个字典，存储着行信息。示例：{&quot;id&quot;: 123, &quot;name&quot;: &quot;啦啦啦&quot;}</span>
+<span class="sd">    参数 my_field: 在本例中期待传入要修改的字段名。示例：id, name</span>
+<span class="sd">    参数 my_value: 将 my_field 的值设置为 my_value</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">new_row</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="c1"># 一定要有</span>
+
+    <span class="c1"># 中间的处理逻辑，主要自定义这部分</span>
+    <span class="n">new_row</span><span class="p">[</span><span class="n">my_field</span><span class="p">]</span> <span class="o">=</span> <span class="n">my_value</span>
+
+    <span class="k">return</span> <span class="n">new_row</span> <span class="c1"># 一定要有，返回处理后的结果，来交给接下来的处理函数，或者同步到es</span>
+
+<span class="c1"># 自定义函数2，如果 _id 为空，就强行指定 _id 为 &quot;123&quot;</span>
+<span class="k">def</span> <span class="nf">my_func2</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+    <span class="n">row</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;_id&quot;</span><span class="p">]:</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;123&quot;</span>
+    <span class="k">return</span> <span class="n">row</span>
+
+<span class="c1"># 自定义函数3...</span>
+
+</pre></div>
+</div>
+<p>然后可以直接在pipeline里使用了</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="s2">&quot;pipeline&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;my_func&quot;</span><span class="p">:</span> <span class="c1"># 刚刚自定义的函数名</span>
+                    <span class="c1"># 自定义的参数</span>
+                    <span class="c1"># 其中row参数 不用写</span>
+                    <span class="c1"># 将所有的 name 字段的值 改为 &quot;Jack&quot;</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;my_field&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;my_value&quot;</span><span class="p">:</span> <span class="s2">&quot;Jack&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;set_id&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;id&quot;</span><span class="p">}}</span>  <span class="c1"># 设置 id 字段的值为 es 中文档 _id</span>
+            <span class="p">],</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="">
+<span id="id20"></span><h1>常见问题<a class="headerlink" href="#" title="永久链接至标题">¶</a></h1>
+<div class="section" id="">
+<span id="id21"></span><h2>为什么我的增量同步不及时？<a class="headerlink" href="#" title="永久链接至标题">¶</a></h2>
 <ol>
 <li><p class="first">连接本地数据库增量同步不及时</p>
 <p>该情况暂未收到过反馈，如能复现请联系作者。</p>
@@ -576,13 +641,13 @@
 </div>
 </div>
 <div class="section" id="">
-<span id="id20"></span><h1>待改进<a class="headerlink" href="#" title="永久链接至标题">¶</a></h1>
+<span id="id22"></span><h1>待改进<a class="headerlink" href="#" title="永久链接至标题">¶</a></h1>
 <ol class="simple">
 <li>据部分用户反馈，全量同步百万级以上的数据性能不佳。</li>
 </ol>
 </div>
 <div class="section" id="">
-<span id="id21"></span><h1>未完待续<a class="headerlink" href="#" title="永久链接至标题">¶</a></h1>
+<span id="id23"></span><h1>未完待续<a class="headerlink" href="#" title="永久链接至标题">¶</a></h1>
 <p>文档近期会较频繁更新，任何问题、建议都收到欢迎，请在issues留言，会在24小时内回复；或加入QQ群: 569069847；</p>
 </div>
 
