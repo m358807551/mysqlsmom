@@ -482,6 +482,63 @@ def my_func2(row):
 
 ## 常见问题
 
+#### 没有对应的 es 版本
+
+```
+pip install --upgrade elasticsearch==6.4.2
+```
+
+提示类似：
+
+```
+Could not find a version that satisfies the requirement elasticsearch==6.4.2 (from versions: 0.4.1, 0.4.2, 0.4.3, 0.4.4, 0.4.5, 1.0.0, 1.1.0, 1.1.1, 1.2.0, 1.3.0, 1.4.0, 1.5.0, 1.6.0, 1.7.0, 1.8.0, 1.9.0, 2.0.0, 2.1.0, 2.2.0, 2.3.0, 2.4.0, 2.4.1, 5.0.0, 5.0.1, 5.1.0, 5.2.0, 5.3.0, 5.4.0, 5.5.0, 5.5.1, 5.5.2, 5.5.3, 6.0.0, 6.1.1, 6.2.0, 6.3.0, 6.3.1)
+No matching distribution found for elasticsearch==6.4.2
+```
+
+换较新的几个版本也兼容
+
+```
+pip install --upgrade elasticsearch==6.3.1
+```
+
+#### 安装出现问题
+
+在虚拟环境安装，遇到的环境问题会变少
+
+1. 准备
+   ```
+   pip install virtualenv
+   ```
+
+2. 当前目录创建虚拟环境
+   ```
+   virtualenv ./venv
+   ```
+
+3. 进入虚拟环境
+   ```
+   . ./venv/bin/activate
+   ```
+
+4. 安装 mysqlsmom
+   ```
+   pip install mysqlsmom
+   pip install --upgrade elasticsearch==5.4  # 换成所需版本
+   ```
+
+5. 运行
+   ```
+   mom new ...
+   ```
+
+6. 退出虚拟环境
+    ```
+    deactivate
+    ```
+
+注意以后运行 mysqlsmom 都要进入虚拟环境
+
+
 #### 为什么我的增量同步不及时？
 
 1. 连接本地数据库增量同步不及时
@@ -494,8 +551,8 @@ def my_func2(row):
 
 ## 待改进
 
-1. 据部分用户反馈，全量同步百万级以上的数据性能不佳。
+1. 错误日志和稳定性有待提升；
 
 ## 未完待续
 
-文档近期会较频繁更新，任何问题、建议都收到欢迎，请在issues留言，会在24小时内回复；或加入QQ群: 569069847；
+任何问题、建议都收到欢迎，请在issues留言，会在24小时内回复；或加入QQ群: 569069847；

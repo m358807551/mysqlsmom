@@ -109,6 +109,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#">常见问题</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#es">没有对应的 es 版本</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#">安装出现问题</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#">为什么我的增量同步不及时？</a></li>
 </ul>
 </li>
@@ -628,8 +630,61 @@
 </div>
 <div class="section" id="">
 <span id="id20"></span><h1>常见问题<a class="headerlink" href="#" title="永久链接至标题">¶</a></h1>
+<div class="section" id="es">
+<span id="es"></span><h2>没有对应的 es 版本<a class="headerlink" href="#es" title="永久链接至标题">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">elasticsearch</span><span class="o">==</span><span class="mf">6.4</span><span class="o">.</span><span class="mi">2</span>
+</pre></div>
+</div>
+<p>提示类似：</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Could</span> <span class="ow">not</span> <span class="n">find</span> <span class="n">a</span> <span class="n">version</span> <span class="n">that</span> <span class="n">satisfies</span> <span class="n">the</span> <span class="n">requirement</span> <span class="n">elasticsearch</span><span class="o">==</span><span class="mf">6.4</span><span class="o">.</span><span class="mi">2</span> <span class="p">(</span><span class="kn">from</span> <span class="nn">versions</span><span class="p">:</span> <span class="mf">0.4</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.4</span><span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.4</span><span class="o">.</span><span class="mi">3</span><span class="p">,</span> <span class="mf">0.4</span><span class="o">.</span><span class="mi">4</span><span class="p">,</span> <span class="mf">0.4</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="mf">1.0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.1</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.2</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.3</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.4</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.5</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.6</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.7</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.8</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.9</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mf">2.0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mf">2.1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mf">2.2</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mf">2.3</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mf">2.4</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mf">2.4</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="mf">5.0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mf">5.0</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="mf">5.1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mf">5.2</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mf">5.3</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mf">5.4</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mf">5.5</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mf">5.5</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="mf">5.5</span><span class="o">.</span><span class="mi">2</span><span class="p">,</span> <span class="mf">5.5</span><span class="o">.</span><span class="mi">3</span><span class="p">,</span> <span class="mf">6.0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mf">6.1</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="mf">6.2</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mf">6.3</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mf">6.3</span><span class="o">.</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">No</span> <span class="n">matching</span> <span class="n">distribution</span> <span class="n">found</span> <span class="k">for</span> <span class="n">elasticsearch</span><span class="o">==</span><span class="mf">6.4</span><span class="o">.</span><span class="mi">2</span>
+</pre></div>
+</div>
+<p>换较新的几个版本也兼容</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">elasticsearch</span><span class="o">==</span><span class="mf">6.3</span><span class="o">.</span><span class="mi">1</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="">
-<span id="id21"></span><h2>为什么我的增量同步不及时？<a class="headerlink" href="#" title="永久链接至标题">¶</a></h2>
+<span id="id21"></span><h2>安装出现问题<a class="headerlink" href="#" title="永久链接至标题">¶</a></h2>
+<p>在虚拟环境安装，遇到的环境问题会变少</p>
+<ol>
+<li><p class="first">准备</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">virtualenv</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">当前目录创建虚拟环境</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">virtualenv</span> <span class="o">./</span><span class="n">venv</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">进入虚拟环境</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span> <span class="o">./</span><span class="n">venv</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">activate</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">安装 mysqlsmom</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">mysqlsmom</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">elasticsearch</span><span class="o">==</span><span class="mf">5.4</span>  <span class="c1"># 换成所需版本</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">运行</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mom</span> <span class="n">new</span> <span class="o">...</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">退出虚拟环境</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">deactivate</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>注意以后运行 mysqlsmom 都要进入虚拟环境</p>
+</div>
+<div class="section" id="">
+<span id="id22"></span><h2>为什么我的增量同步不及时？<a class="headerlink" href="#" title="永久链接至标题">¶</a></h2>
 <ol>
 <li><p class="first">连接本地数据库增量同步不及时</p>
 <p>该情况暂未收到过反馈，如能复现请联系作者。</p>
@@ -641,14 +696,14 @@
 </div>
 </div>
 <div class="section" id="">
-<span id="id22"></span><h1>待改进<a class="headerlink" href="#" title="永久链接至标题">¶</a></h1>
+<span id="id23"></span><h1>待改进<a class="headerlink" href="#" title="永久链接至标题">¶</a></h1>
 <ol class="simple">
-<li>据部分用户反馈，全量同步百万级以上的数据性能不佳。</li>
+<li>错误日志和稳定性有待提升；</li>
 </ol>
 </div>
 <div class="section" id="">
-<span id="id23"></span><h1>未完待续<a class="headerlink" href="#" title="永久链接至标题">¶</a></h1>
-<p>文档近期会较频繁更新，任何问题、建议都收到欢迎，请在issues留言，会在24小时内回复；或加入QQ群: 569069847；</p>
+<span id="id24"></span><h1>未完待续<a class="headerlink" href="#" title="永久链接至标题">¶</a></h1>
+<p>任何问题、建议都收到欢迎，请在issues留言，会在24小时内回复；或加入QQ群: 569069847；</p>
 </div>
 
 
