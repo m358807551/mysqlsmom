@@ -9,6 +9,7 @@ import hashlib
 import shutil
 import os
 import ntpath
+import re
 from collections import defaultdict
 from os.path import join, dirname, abspath, exists
 
@@ -108,9 +109,13 @@ class ToDest(object):
             logging.info(json.dumps(row, cls=DateEncoder))
 
             _id = row["_id"]
+
+            print ("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+            print row
             del row["_id"]
 
             for dest in dests:
+                index = ToDest.replace_by_reg(dest["es"]["index"],row)
                 if dest.keys()[0] != "es":
                     continue
 
@@ -118,7 +123,7 @@ class ToDest(object):
                     doc = {
                         "_id": _id,
                         "_type": dest["es"]["type"],
-                        "_index": dest["es"]["index"],
+                        "_index": index,
                         "_source": {'doc': row, 'doc_as_upsert': True},
                         '_op_type': 'update'
                     }
@@ -126,11 +131,13 @@ class ToDest(object):
                 elif dest["es"]["action"] == "delete":
                     doc = {
                         '_op_type': 'delete',
-                        '_index': dest["es"]["index"],
+                        '_index': index,
                         '_type': dest["es"]["type"],
                         '_id': _id
                     }
                     self.docs.append(doc)
+
+
 
     def upload_docs(self):
         try:
@@ -142,6 +149,15 @@ class ToDest(object):
                 if not error.values()[0]["found"] == False:
                     raise e
         self.docs = []
+
+    def replace_by_reg(source, row):
+        pattern = re.compile('\$\{(.*?)}')
+        array = pattern.findall(source)
+        for field in array:
+            value = row[field]
+            field_source = '${' + field + '}'
+            source = source.replace(field_source, str(value))
+        return source
 
 
 def handle_init_stream(config):
