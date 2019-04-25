@@ -115,7 +115,14 @@ class ToDest(object):
             del row["_id"]
 
             for dest in dests:
-                index = ToDest.replace_by_reg(dest["es"]["index"],row)
+                index = dest["es"]["index"]
+                pattern = re.compile('\$\{(.*?)}')
+                array = pattern.findall(index)
+                for field in array:
+                    value = row[field]
+                    field_source = '${' + field + '}'
+                    index = index.replace(field_source, str(value))
+
                 if dest.keys()[0] != "es":
                     continue
 
@@ -150,14 +157,7 @@ class ToDest(object):
                     raise e
         self.docs = []
 
-    def replace_by_reg(source, row):
-        pattern = re.compile('\$\{(.*?)}')
-        array = pattern.findall(source)
-        for field in array:
-            value = row[field]
-            field_source = '${' + field + '}'
-            source = source.replace(field_source, str(value))
-        return source
+
 
 
 def handle_init_stream(config):
