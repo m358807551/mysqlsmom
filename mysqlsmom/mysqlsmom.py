@@ -110,8 +110,6 @@ class ToDest(object):
 
             _id = row["_id"]
 
-            print ("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-            print row
             del row["_id"]
 
             for dest in dests:
