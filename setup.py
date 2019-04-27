@@ -45,12 +45,12 @@ yolk==0.4.3
 
 setup(
     name='mysqlsmom',
-    version='0.1.7',
+    version='0.1.6',
     keywords='mysql elasticsearch es sync',
     description='sync data from mysql to elasticsearch',
     license='MIT License',
-    url='https://github.com/MasterN05/mysqlsmom',
-    author='musheng',
+    url='https://github.com/m358807551/mysqlsmom',
+    author='MCTW',
     author_email='m358807551@163.com',
     packages=find_packages(),
     include_package_data=True,
